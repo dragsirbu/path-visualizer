@@ -1,0 +1,21 @@
+<div
+    class="cell"
+    [ngClass]="{
+        isVisited: cell.isVisited,
+        isWall: cell.isWall,
+        isEndNode: cell.isEnd,
+        inPath: cell.inPath,
+        isStartNode: cell.isStart
+    }"
+    (mouseover)="CreateWall($event)"
+    (mousedown)="MouseDown($event)"
+    (mouseup)="MouseUp($event)"
+    #nodeel
+    draggable="{{ cell.isStart || cell.isEnd ? true : false }}"
+    (dragstart)="DragStart($event)"
+    dropzone="copy"
+    (drop)="MouseUp($event)"
+    (dragenter)="DragCancel($event)"
+    (dragleave)="DragCancel($event)"
+    (dragover)="DragCancel($event)"
+></div>
