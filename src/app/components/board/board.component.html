@@ -1,1 +1,11 @@
-<p>board works!</p>
+<div
+    class="container-fluid"
+    (mousedown)="mouseDown($event)"
+    (mouseup)="mouseUp($event)"
+>
+    <div *ngFor="let r of [].constructor(rows); let rn = index" class="row no-gutters">
+        <div *ngFor="let c of [].constructor(cols); let cn = index" class="col">
+            <app-cell [cell]="cells[rn][cn]"></app-cell>
+        </div>
+    </div>
+</div>

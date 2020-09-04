@@ -65,7 +65,7 @@ export class CellComponent implements OnInit {
     }
 
     DragStart(event) {
-        event.dataTransfer.setData('text/plain', JSON.stringify(this.node))
+        event.dataTransfer.setData('text/plain', JSON.stringify(this.cell))
         event.data = this.cell
     }
 }
