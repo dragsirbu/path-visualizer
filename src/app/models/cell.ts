@@ -1,13 +1,13 @@
 import Point from './point'
 
 export default class Cell {
-    public isVisited
-    public isWall
-    public isStart
-    public isEnd
-    public row
-    public col
-    public distance
+    public isVisited: boolean
+    public isWall: boolean
+    public isStart: boolean
+    public isEnd: boolean
+    public row: number
+    public col: number
+    public distance: number = 0
     public previousCell
     public inPath = false
 
