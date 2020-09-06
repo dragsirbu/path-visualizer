@@ -9,6 +9,7 @@ import Cell from 'src/app/models/cell'
 import Point from 'src/app/models/point'
 import { MessageService } from 'src/app/services/message.service'
 import { CellComponent } from '../cell/cell.component'
+import DijkstraAlgorithm from 'src/app/models/dijkstra'
 
 @Component({
     selector: 'app-board',
@@ -44,9 +45,9 @@ export class BoardComponent implements OnInit {
     cells: Array<Array<Cell>> = []
 
     startCell: Point = { row: 10, col: 14 }
-    endCell: Point = { row: 8, col: 44 }
+    endCell: Point = { row: 8, col: 25 }
 
-    @ViewChildren('cell') mycomponents: QueryList<any>
+    @ViewChildren('cell') myComponents: QueryList<CellComponent>
 
     constructor(
         private ref: ChangeDetectorRef,
@@ -54,8 +55,6 @@ export class BoardComponent implements OnInit {
     ) {}
 
     initializeStartEndNodes() {
-        this.startCell = { row: 10, col: 14 }
-        this.endCell = { row: 8, col: 44 }
         let stCell: Cell = this.getCell(this.startCell)
         stCell.isStart = true
         this.startCell = stCell
@@ -126,78 +125,78 @@ export class BoardComponent implements OnInit {
      * 3. Then we iterate over again and try to contruct the path by looking at the previousNode Property. We use set
      * timeout to animate this also.
      */
-    // start() {
-    //     // this.RunChangeDetector();
+    startVisualizing() {
+        // this.RunChangeDetector();
 
-    //     //initialize the algorithm
-    //     const dj = new DjikstraAlgrothim()
+        //initialize the algorithm
+        const dijkstra = new DijkstraAlgorithm();
 
-    //     //run algorithm and get visited nodes
-    //     const visitedNodes = dj.start(this.nodes, this.startNode, this.endNode)
+        //run algorithm and get visited nodes
+        const visitedCells = dijkstra.start(this.cells, this.startCell, this.endCell)
 
-    //     //run change detection to create animated effect
-    //     for (let i = 0; i < visitedNodes.length; i++) {
-    //         this.mycomponents.forEach((cmp: NodeComponent) => {
-    //             if (cmp.node == visitedNodes[i]) {
-    //                 setTimeout(() => {
-    //                     cmp.runChangeDetector()
-    //                 }, 5 * i)
-    //             }
-    //         })
-    //     }
+        //run change detection to create animated effect
+        for (let i = 0; i < visitedCells.length; i++) {
+            this.myComponents.forEach((cmp: CellComponent) => {
+                if (cmp.cell == visitedCells[i]) {
+                    setTimeout(() => {
+                        cmp.runChangeDetector()
+                    }, 1000 * i)
+                }
+            })
+        }
 
-    //     let lastnode = visitedNodes[visitedNodes.length - 1]
-    //     while (lastnode != null) {
-    //         lastnode.inPath = true
-    //         lastnode = lastnode.previousNode
-    //     }
+        let lastCell = visitedCells[visitedCells.length - 1]
+        while (lastCell != null) {
+            lastCell.inPath = true
+            lastCell = lastCell.previousCell
+        }
 
-    //     let totalTime = 5 * (visitedNodes.length - 1)
+        let totalTime = 5 * (visitedCells.length - 1)
 
-    //     //update the nodes to reflect the shortest path
-    //     setTimeout(() => {
-    //         let i = 0
-    //         this.mycomponents.forEach((cmp: NodeComponent) => {
-    //             setTimeout(() => {
-    //                 cmp.runChangeDetector()
-    //             }, i * 2)
-    //             i += 1
-    //         })
-    //     }, totalTime)
-    // }
+        //update the nodes to reflect the shortest path
+        setTimeout(() => {
+            let i = 0
+            this.myComponents.forEach((cmp: CellComponent) => {
+                setTimeout(() => {
+                    cmp.runChangeDetector()
+                }, i * 1000)
+                i += 1
+            })
+        }, totalTime)
+    }
 
     /**
      * Resets the Board and restore it to its inital position;
      */
-    // Reset() {
-    //     for (let i = 0; i < this.rows; i++) {
-    //         for (let j = 0; j < this.cols; j++) {
-    //             this.nodes[i][j].reset()
-    //         }
-    //     }
-    //     this.InitializeStartEndNodes()
+    resetBoard() {
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                this.cells[i][j].reset()
+            }
+        }
+        this.initializeStartEndNodes()
 
-    //     let newNodes = []
-    //     for (let i = 0; i < this.rows; i++) {
-    //         newNodes.push([...this.nodes[i]])
-    //     }
-    //     delete this.nodes
-    //     this.nodes = newNodes
+        let newCells = []
+        for (let i = 0; i < this.rows; i++) {
+            newCells.push([...this.cells[i]])
+        }
+        delete this.cells
+        this.cells = newCells
 
-    //     //run change detector to update the nodes
-    //     this.RunChangeDetector()
-    // }
+        //run change detector to update the nodes
+        this.runChangeDetector()
+    }
 
     //runs the change detection over all the node components to update them.
     //or on a given index.
-    // RunChangeDetector(type = 'all', index?) {
-    //     if (type == 'all') {
-    //         console.log('her')
-    //         let toRun = []
-    //         this.mycomponents.forEach((cmp: CellComponent) => {
-    //             toRun.push(cmp.runChangeDetector())
-    //         })
-    //         Promise.all(toRun)
-    //     }
-    // }
+    runChangeDetector(type = 'all', index?) {
+        if (type == 'all') {
+            console.log('her')
+            let toRun = []
+            this.myComponents.forEach((cmp: CellComponent) => {
+                toRun.push(cmp.runChangeDetector())
+            })
+            Promise.all(toRun)
+        }
+    }
 }

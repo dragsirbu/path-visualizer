@@ -1,11 +1,25 @@
-<div
-    class="container-fluid"
-    (mousedown)="mouseDown($event)"
-    (mouseup)="mouseUp($event)"
->
-    <div *ngFor="let r of [].constructor(rows); let rn = index" class="row no-gutters">
-        <div *ngFor="let c of [].constructor(cols); let cn = index" class="col">
-            <app-cell [cell]="cells[rn][cn]"></app-cell>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <button mat-raised-button color="primary" (click)="startVisualizing()">Start visualizing</button>
+            <button class="ml-5" mat-raised-button (click)="resetBoard()">Reset</button>
+        </div>
+    </div>
+    <div
+        class="wrapper mt-5"
+        (mousedown)="mouseDown($event)"
+        (mouseup)="mouseUp($event)"
+    >
+        <div
+            *ngFor="let r of [].constructor(rows); let rn = index"
+            class="row no-gutters"
+        >
+            <div
+                *ngFor="let c of [].constructor(cols); let cn = index"
+                class="col"
+            >
+                <app-cell [cell]="cells[rn][cn]"></app-cell>
+            </div>
         </div>
     </div>
 </div>

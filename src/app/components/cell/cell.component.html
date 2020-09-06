@@ -7,15 +7,15 @@
         inPath: cell.inPath,
         isStartNode: cell.isStart
     }"
-    (mouseover)="CreateWall($event)"
-    (mousedown)="MouseDown($event)"
-    (mouseup)="MouseUp($event)"
+    (mouseover)="createWall($event)"
+    (mousedown)="mouseDown($event)"
+    (mouseup)="mouseUp($event)"
     #nodeel
     draggable="{{ cell.isStart || cell.isEnd ? true : false }}"
-    (dragstart)="DragStart($event)"
+    (dragstart)="dragStart($event)"
     dropzone="copy"
-    (drop)="MouseUp($event)"
-    (dragenter)="DragCancel($event)"
-    (dragleave)="DragCancel($event)"
-    (dragover)="DragCancel($event)"
+    (drop)="mouseUp($event)"
+    (dragenter)="dragCancel($event)"
+    (dragleave)="dragCancel($event)"
+    (dragover)="dragCancel($event)"
 ></div>
