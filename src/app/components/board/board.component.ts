@@ -129,40 +129,69 @@ export class BoardComponent implements OnInit {
         // this.RunChangeDetector();
 
         //initialize the algorithm
-        const dijkstra = new DijkstraAlgorithm();
+        const dijkstra = new DijkstraAlgorithm()
 
         //run algorithm and get visited nodes
-        const visitedCells = dijkstra.start(this.cells, this.startCell, this.endCell)
+        const visitedCells = dijkstra.start(
+            this.cells,
+            this.startCell,
+            this.endCell
+        )
+        console.log(this.cells)
 
+        const cellsInShortestPath = dijkstra.getCellsInShortestPathOrder(
+            this.endCell
+        )
+
+        this.animateDijkstra(visitedCells, cellsInShortestPath)
+        // let lastCell = visitedCells[visitedCells.length - 1]
+        // while (lastCell != null) {
+        //     lastCell.inPath = true
+        //     lastCell = lastCell.previousCell
+        // }
+    }
+
+    animateDijkstra(visitedCells, cellsInShortestPath) {
         //run change detection to create animated effect
+        this.cells.forEach((row: Cell[]) => {
+            row.forEach((cell: Cell) => {
+                cell.isVisited = false
+            })
+        })
         for (let i = 0; i < visitedCells.length; i++) {
-            this.myComponents.forEach((cmp: CellComponent) => {
-                if (cmp.cell == visitedCells[i]) {
-                    setTimeout(() => {
-                        cmp.runChangeDetector()
-                    }, 1000 * i)
-                }
-            })
-        }
-
-        let lastCell = visitedCells[visitedCells.length - 1]
-        while (lastCell != null) {
-            lastCell.inPath = true
-            lastCell = lastCell.previousCell
-        }
-
-        let totalTime = 5 * (visitedCells.length - 1)
-
-        //update the nodes to reflect the shortest path
-        setTimeout(() => {
-            let i = 0
-            this.myComponents.forEach((cmp: CellComponent) => {
+            if (i === visitedCells.length - 1) {
                 setTimeout(() => {
-                    cmp.runChangeDetector()
-                }, i * 1000)
-                i += 1
-            })
-        }, totalTime)
+                    this.animatePath(cellsInShortestPath)
+                }, 10 * i)
+                return
+            }
+            setTimeout(() => {
+                this.myComponents.forEach((cmp: CellComponent) => {
+                    if (cmp.cell === visitedCells[i]) {
+                        cmp.cell.isVisited = true
+                    }
+                })
+            }, 10 * i)
+        }
+    }
+
+    animatePath(cellsInShortestPath) {
+        for (let i = 0; i < cellsInShortestPath.length; i++) {
+            setTimeout(() => {
+                const cell = cellsInShortestPath[i]
+                this.myComponents.forEach((cmp: CellComponent) => {
+                    // cmp.cell.isVisited = false;
+                    if (
+                        cell == cmp.cell &&
+                        !cmp.cell.isEnd &&
+                        !cmp.cell.isStart
+                    ) {
+                        cmp.cell.inPath = true
+                    }
+                    // cmp.runChangeDetector()
+                })
+            }, 50 * i)
+        }
     }
 
     /**

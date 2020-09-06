@@ -10,7 +10,6 @@
     (mouseover)="createWall($event)"
     (mousedown)="mouseDown($event)"
     (mouseup)="mouseUp($event)"
-    #nodeel
     draggable="{{ cell.isStart || cell.isEnd ? true : false }}"
     (dragstart)="dragStart($event)"
     dropzone="copy"

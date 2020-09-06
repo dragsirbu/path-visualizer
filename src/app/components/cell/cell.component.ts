@@ -18,6 +18,7 @@ export class CellComponent implements OnInit {
     @Input('cell') cell: Cell
     @Input('isClicked') isClicked: boolean
     @Output('dropped') dropped: EventEmitter<any> = new EventEmitter<any>()
+    // id = 'node-' + this.cell.row + '-' + this.cell.col;
 
     constructor(
         private messageService: MessageService,
@@ -49,8 +50,8 @@ export class CellComponent implements OnInit {
             var data = (event as any).dataTransfer.getData('text')
             console.log(data, (event as any).data)
             this.dropped.emit({
-                previousNode: JSON.parse(data),
-                newNode: this.cell,
+                previousCell: JSON.parse(data),
+                newCell: this.cell,
             })
         } catch (err) {
             console.error(err)

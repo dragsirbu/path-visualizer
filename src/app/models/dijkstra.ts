@@ -65,4 +65,14 @@ export default class DijkstraAlgorithm {
         )
         return neighbors
     }
+
+    getCellsInShortestPathOrder(finish) {
+        const cellsInShortestPathOrder = []
+        let current = finish
+        while (current !== null) {
+            cellsInShortestPathOrder.unshift(current)
+            current = current.previousCell
+        }
+        return cellsInShortestPathOrder
+    }
 }
